@@ -1,9 +1,8 @@
 import flask
 import os
-import requests
+import requests, requests_oauthlib
 import json
 import random
-import requests_oauthlib 
 
 
 app = flask.Flask(__name__)
