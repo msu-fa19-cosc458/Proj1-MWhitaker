@@ -1,62 +1,61 @@
-import flask
-import os
-import requests
-import requests_oauthlib
-import json
-import random
-
+# app.py
+import flask, random, os, requests, json, random, requests_oauthlib  
 
 app = flask.Flask(__name__)
 
 
 
-@app.route('/')
-def index():
-  ##twitter api...hopefully
-    twitt_url = "https://api.twitter.com/1.1/search/tweets.json?q=kehlanimusic"
-    random_tweet = random.randint(0,14)
-    oauth = requests_oauthlib.OAuth1(
-    "eBuX7hYeHDVpIEwgA5cwwAz8P", 
-    "mEyLbMPJvLS2YAcxFJLk4yT44uhsgLsK5O4kr1w66XwtznEgXv",
-    "1167289280638726144-s4dO5VvLl5lFvXNMn39aG1vjY2NXuZ",
-    "ijHOBxlSLDU8jwnLRbMxlCqW6c5FCOkMAQDoqN0MpOvOo"
-    )
-
-    ## not sure if this will actually show the tweets, gives links for tweets
-    ##a lot of tweets are links...could be a slight issue
-    ##max num is 14(15) for tweets
-    
-    response = requests.get(twitt_url, auth=oauth)
-    json_body = response.json()
-    
-    
-    #print(json.dumps(json_body, indent=2))
-    
-
-    kehlani_tweets = json_body['statuses'][random_tweet]['text']
-
-    #print(kehlani_tweets)
-  
-### genius set up....formatting in index file?    
+@app.route('/')  
+def index(): 
+    #Genius API search
     url = "https://api.genius.com/search?q=Kehlani"
     
-    
+    #Genius API Authorization 
     my_headers = {
-    "Authorization": "Bearer iIUzpgQ_jwrnzWcGPns32mdgaLcLF_KMCZxXydljLb3QLF24GSO1zq38e2uveLY4"
+    "Authorization": "Bearer IQdtZyfMUnXQ53F8b9e3y-jWqaNNNRXoVK-aUdbF1crCTkG7S_VCvMrMOD_Nm2FR"
     }
     
-    playlist = random.randint(0,8)
+    #Chooses a random song
+    random_song = random.randint(0,9)
     response = requests.get(url, headers=my_headers)
     json_body = response.json()
-    song = json_body["response"]["hits"][playlist]["result"]["full_title"]
-    pic = json_body["response"]["hits"][playlist]["result"]['header_image_url']
-    artist = json_body["response"]["hits"][playlist]["result"]['primary_artist']['name']
+    
+    coverart = json_body["response"]["hits"][random_song]["result"]['header_image_url']
+    song = json_body["response"]["hits"][random_song]["result"]["full_title"]
+    artist = json_body["response"]["hits"][random_song]["result"]['primary_artist']['name']
+    
+    
+    #Twitter API to search for tweets
+    twitter_url = "https://api.twitter.com/1.1/search/tweets.json?q=kanyewest"
+    
+    #Retrieves a random tweet
+    twitter_tweet = random.randint(0,14)
+    
+    #Authorization for the Twitter API
+    oauth = requests_oauthlib.OAuth1(
+    "P9G9BJPDMdNWmitx3sn68UXm3", 
+    "EVTYPFAOVa4jgk9fkYMgTP6dpqwPhniUlht7dLtbORM7Yq9LPr",
+    "1167117656073412608-vFF34UgaXtFhNDxuXhMceeTadWEL6H",
+    "90rgA5HLFb4SvWSHEr3q3oRKOnWzPpg4NfSVleWzctQcV"
+    )
 
+    response = requests.get(twitter_url, auth=oauth)
+    json_body = response.json()
+    
 
-    return flask.render_template("index.html", song = song, pic= pic, artist = artist, kehlani_tweets= kehlani_tweets)
+    tweets = json_body['statuses'][twitter_tweet]['text']
+  
+    
+
+    return flask.render_template("index.html", 
+                                coverart = coverart, 
+                                song = song, 
+                                artist = artist, 
+                                tweets = tweets)
+
 
 app.run(
-        port=int(os.getenv('PORT', 8080)),
-        host=os.getenv('IP', '0.0.0.0'),
-        debug=True
-    )
+    port=int(os.getenv('PORT', 8080)),
+    host=os.getenv('IP', '0.0.0.0'),
+    debug = True
+)
