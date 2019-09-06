@@ -14,12 +14,11 @@ def index():
     twitt_url = "https://api.twitter.com/1.1/search/tweets.json?q=kehlanimusic"
     random_tweet = random.randint(0,14)
     oauth = requests_oauthlib.OAuth1(
-        os.getenv("API_KEY"),
-        os.getenv("API_SECRET"),
-        os.getenv("ACCESS_TOKEN"),
-        os.getenv("ACCESS_TOKEN_SECRET")
+    "eBuX7hYeHDVpIEwgA5cwwAz8P", 
+    "mEyLbMPJvLS2YAcxFJLk4yT44uhsgLsK5O4kr1w66XwtznEgXv",
+    "1167289280638726144-s4dO5VvLl5lFvXNMn39aG1vjY2NXuZ",
+    "ijHOBxlSLDU8jwnLRbMxlCqW6c5FCOkMAQDoqN0MpOvOo"
     )
-
 
     ## not sure if this will actually show the tweets, gives links for tweets
     ##a lot of tweets are links...could be a slight issue
